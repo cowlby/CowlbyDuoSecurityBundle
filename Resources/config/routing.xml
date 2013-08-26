@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="cowlby_duo_security_login" pattern="/login">
+        <default key="_controller">cowlby_duo_security.controller.default:loginAction</default>
+    </route>
+    <route id="cowlby_duo_security_logout" pattern="/logout">
+        <default key="_controller">cowlby_duo_security.controller.default:logoutAction</default>
+    </route>
+    <route id="cowlby_duo_security_login_check" pattern="/login/check">
+        <default key="_controller">cowlby_duo_security.controller.default:loginCheckAction</default>
+    </route>
+    <route id="cowlby_duo_security_duo_check" pattern="/duo/check">
+        <default key="_controller">cowlby_duo_security.controller.default:duoCheckAction</default>
+    </route>
+    <route id="cowlby_duo_security_duo_verify" pattern="/duo/verify">
+        <default key="_controller">cowlby_duo_security.controller.default:duoVerifyAction</default>
+    </route>
+</routes>

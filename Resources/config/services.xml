@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="cowlby_duo_security.duo_web.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoWeb</parameter>
+        <parameter key="cowlby_duo_security.controller.default.class">Cowlby\Bundle\DuoSecurityBundle\Controller\DefaultController</parameter>
+        <parameter key="cowlby_duo_security.security.authentication.provider.duo_security.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityAuthenticationProvider</parameter>
+        <parameter key="cowlby_duo_security.security.authentication.provider.duo_security_form.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityFormAuthenticationProvider</parameter>
+        <parameter key="cowlby_duo_security.security.authentication.listener.duo_security.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityAuthenticationListener</parameter>
+        <parameter key="cowlby_duo_security.security.authentication.listener.duo_security_form.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityFormAuthenticationListener</parameter>
+        <parameter key="cowlby_duo_security.security.authentication.success_handler.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityAuthenticationSuccessHandler</parameter>
+    </parameters>
+
+    <services>
+        <!-- DuoWeb -->
+        <service id="cowlby_duo_security.duo_web" class="%cowlby_duo_security.duo_web.class%">
+            <argument>%cowlby_duo_security.duo.ikey%</argument>
+            <argument>%cowlby_duo_security.duo.skey%</argument>
+            <argument>%cowlby_duo_security.duo.akey%</argument>
+            <argument>%cowlby_duo_security.duo.host%</argument>
+        </service>
+
+        <!-- Authentication Provider -->
+        <service id="cowlby_duo_security.security.authentication.provider.duo_security"
+                 class="%cowlby_duo_security.security.authentication.provider.duo_security.class%"
+                 abstract="true"
+                 public="false">
+            <argument type="service" id="cowlby_duo_security.duo_web" />
+            <argument /> <!-- User Provider -->
+            <argument type="service" id="security.user_checker" />
+            <argument /> <!-- Provider-shared Key -->
+        </service>
+
+        <!-- Form Authentication Provider -->
+        <service id="cowlby_duo_security.security.authentication.provider.duo_security_form"
+                 class="%cowlby_duo_security.security.authentication.provider.duo_security_form.class%"
+                 abstract="true"
+                 public="false">
+            <argument /> <!-- User Provider -->
+            <argument type="service" id="security.user_checker" />
+            <argument /> <!-- Provider-shared Key -->
+            <argument type="service" id="security.encoder_factory" />
+            <argument>%security.authentication.hide_user_not_found%</argument>
+        </service>
+
+        <!-- Authentication Listener -->
+        <service id="cowlby_duo_security.security.authentication.listener.duo_security"
+                 class="%cowlby_duo_security.security.authentication.listener.duo_security.class%"
+                 parent="security.authentication.listener.abstract"
+                 abstract="true">
+        </service>
+
+        <!-- Form Authentication Listener -->
+        <service id="cowlby_duo_security.security.authentication.listener.duo_security_form"
+                 class="%cowlby_duo_security.security.authentication.listener.duo_security_form.class%"
+                 parent="security.authentication.listener.abstract"
+                 abstract="true">
+        </service>
+
+        <!-- Authentication Success Handler -->
+        <service id="cowlby_duo_security.security.authentication.success_handler"
+                 class="%cowlby_duo_security.security.authentication.success_handler.class%"
+                 public="false"
+                 abstract="true">
+            <argument type="service" id="cowlby_duo_security.duo_web" />
+            <argument type="service" id="templating" />
+            <argument type="service" id="security.http_utils" />
+            <argument>/</argument>
+        </service>
+
+        <!-- Default Controller -->
+        <service id="cowlby_duo_security.controller.default" class="%cowlby_duo_security.controller.default.class%">
+            <argument type="service" id="templating" />
+            <argument type="service" id="router" />
+        </service>
+    </services>
+</container>
