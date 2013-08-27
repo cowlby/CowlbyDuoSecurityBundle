@@ -58,6 +58,12 @@
                  class="%cowlby_duo_security.security.authentication.listener.duo_security_form.class%"
                  parent="security.authentication.listener.abstract"
                  abstract="true">
+            <call method="setDuo">
+               <argument type="service" id="cowlby_duo_security.duo_web" />
+            </call>
+            <call method="setTemplating">
+               <argument type="service" id="templating" />
+            </call>
         </service>
 
         <!-- Authentication Success Handler -->

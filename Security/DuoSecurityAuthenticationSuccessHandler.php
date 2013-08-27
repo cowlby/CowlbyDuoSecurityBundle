@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DuoSecurityAuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
@@ -30,10 +31,14 @@ class DuoSecurityAuthenticationSuccessHandler implements AuthenticationSuccessHa
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        $username = $token->getUser()->getUsername();
+        $user = $token->getUser();
+
+        if ($user instanceof UserInterface) {
+            $user = $user->getUsername();
+        }
 
         $duoOptions = json_encode(array(
-            'sig_request' => $this->duo->signRequest($username),
+            'sig_request' => $this->duo->signRequest($user),
             'host' => $this->duo->getHost(),
             'post_action' => $this->httpUtils->generateUri($request, 'cowlby_duo_security_duo_verify')
         ), JSON_UNESCAPED_SLASHES);

@@ -2,16 +2,29 @@
 
 namespace Cowlby\Bundle\DuoSecurityBundle\DependencyInjection\Security\Factory;
 
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLoginFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 
-class DuoSecurityFormFactory extends FormLoginFactory
+class DuoSecurityFormFactory extends AbstractFactory
 {
     public function __construct()
     {
-        parent::__construct();
+        $this->addOption('username_parameter', '_username');
+        $this->addOption('password_parameter', '_password');
+        $this->addOption('intention', 'authenticate');
+    }
+
+    public function addConfiguration(NodeDefinition $node)
+    {
+        parent::addConfiguration($node);
+    }
+
+    public function getPosition()
+    {
+        return 'form';
     }
 
     public function getKey()
