@@ -5,8 +5,8 @@
         <title>Duo Security Authentication</title>
         <script src="//code.jquery.com/jquery.min.js"></script>
         <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-        {% block cowlby_duo_security_script %}
-        {% endblock cowlby_duo_security_script %}
+        {% block cowlby_duo_security_duo_scripts %}
+        {% endblock cowlby_duo_security_duo_scripts %}
     </head>
     <body>
         {% for type, messages in app.session.flashbag.all() %}
@@ -18,8 +18,8 @@
         {% endfor %}
 
         <div>
-            {% block cowlby_duo_security_iframe %}
-            {% endblock cowlby_duo_security_iframe %}
+            {% block cowlby_duo_security_duo_iframe %}
+            {% endblock cowlby_duo_security_duo_iframe %}
         </div>
     </body>
 </html>

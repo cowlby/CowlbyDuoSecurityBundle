@@ -1,10 +1,10 @@
 {% extends 'CowlbyDuoSecurityBundle::layout.html.twig' %}
 
-{% block cowlby_duo_security_script %}
+{% block cowlby_duo_security_duo_scripts %}
     <script src="{{ asset('bundles/cowlbyduosecurity/js/duo.js') }}"></script>
     <script>Duo.init({{ duo_options | raw }});</script>
 {% endblock %}
 
-{% block cowlby_duo_security_iframe %}
+{% block cowlby_duo_security_duo_iframe %}
     <iframe id="duo_iframe" width="620" height="330" frameborder="0"></iframe>
 {% endblock %}
