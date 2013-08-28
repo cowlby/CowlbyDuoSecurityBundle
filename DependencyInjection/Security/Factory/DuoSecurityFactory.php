@@ -9,11 +9,6 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractF
 
 class DuoSecurityFactory extends AbstractFactory
 {
-    public function __construct()
-    {
-        $this->addOption('sig_response_parameter', 'sig_response');
-    }
-
     public function getPosition()
     {
         return 'http';
@@ -26,16 +21,16 @@ class DuoSecurityFactory extends AbstractFactory
 
     protected function getListenerId()
     {
-        return 'cowlby_duo_security.security.authentication.listener.duo_security';
+        return 'cowlby_duo_security.security.authentication.listener.duo';
     }
 
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
-        $provider = 'cowlby_duo_security.security.authentication.provider.duo_security.'.$id;
+        $provider = 'cowlby_duo_security.security.authentication.provider.duo.'.$id;
         $container
-            ->setDefinition($provider, new DefinitionDecorator('cowlby_duo_security.security.authentication.provider.duo_security'))
-            ->replaceArgument(1, new Reference($userProviderId))
-            ->replaceArgument(3, $id)
+            ->setDefinition($provider, new DefinitionDecorator('cowlby_duo_security.security.authentication.provider.duo'))
+            ->replaceArgument(0, new Reference($userProviderId))
+            ->replaceArgument(2, $id)
         ;
 
         return $provider;

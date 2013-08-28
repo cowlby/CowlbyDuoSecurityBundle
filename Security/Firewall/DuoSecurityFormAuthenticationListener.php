@@ -1,7 +1,8 @@
 <?php
 
-namespace Cowlby\Bundle\DuoSecurityBundle\Security;
+namespace Cowlby\Bundle\DuoSecurityBundle\Security\Firewall;
 
+use Cowlby\Bundle\DuoSecurityBundle\Security\DuoWebInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;

@@ -1,15 +1,15 @@
 <?php
 
-namespace Cowlby\Bundle\DuoSecurityBundle\Security;
+namespace Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class DuoSecurityToken extends AbstractToken
 {
-    private $sigResponse;
+    private $credentials;
     private $providerKey;
 
-    public function __construct($sigResponse, $providerKey, array $roles = array())
+    public function __construct($credentials, $providerKey, array $roles = array())
     {
         parent::__construct($roles);
 
@@ -17,24 +17,25 @@ class DuoSecurityToken extends AbstractToken
             throw new \InvalidArgumentException('$providerKey must not be empty.');
         }
 
-        $this->sigResponse = $sigResponse;
+        $this->credentials = $credentials;
         $this->providerKey = $providerKey;
 
         $this->setAuthenticated(count($roles) > 0);
     }
 
-    public function getSigResponse()
-    {
-        return $this->sigResponse;
-    }
-
     public function getCredentials()
     {
-        return null;
+        return $this->credentials;
     }
 
     public function getProviderKey()
     {
         return $this->providerKey;
+    }
+
+    public function eraseCredentials()
+    {
+        parent::eraseCredentials();
+        $this->credentials = null;
     }
 }

@@ -6,12 +6,9 @@
 
     <parameters>
         <parameter key="cowlby_duo_security.duo_web.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoWeb</parameter>
-        <parameter key="cowlby_duo_security.controller.default.class">Cowlby\Bundle\DuoSecurityBundle\Controller\DefaultController</parameter>
-        <parameter key="cowlby_duo_security.security.authentication.provider.duo_security.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityAuthenticationProvider</parameter>
-        <parameter key="cowlby_duo_security.security.authentication.provider.duo_security_form.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityFormAuthenticationProvider</parameter>
-        <parameter key="cowlby_duo_security.security.authentication.listener.duo_security.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityAuthenticationListener</parameter>
-        <parameter key="cowlby_duo_security.security.authentication.listener.duo_security_form.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityFormAuthenticationListener</parameter>
-        <parameter key="cowlby_duo_security.security.authentication.success_handler.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoSecurityAuthenticationSuccessHandler</parameter>
+        <parameter key="cowlby_duo_security.controller.authentication.class">Cowlby\Bundle\DuoSecurityBundle\Controller\AuthenticationController</parameter>
+        <parameter key="cowlby_duo_security.security.authentication.provider.duo.class">Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Provider\DuoSecurityAuthenticationProvider</parameter>
+        <parameter key="cowlby_duo_security.security.authentication.listener.duo.class">Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\DuoSecurityAuthenticationListener</parameter>
     </parameters>
 
     <services>
@@ -23,64 +20,29 @@
             <argument>%cowlby_duo_security.duo.host%</argument>
         </service>
 
-        <!-- Authentication Provider -->
-        <service id="cowlby_duo_security.security.authentication.provider.duo_security"
-                 class="%cowlby_duo_security.security.authentication.provider.duo_security.class%"
-                 abstract="true"
-                 public="false">
+        <!-- Authentication Controller -->
+        <service id="cowlby_duo_security.controller.authentication" class="%cowlby_duo_security.controller.authentication.class%">
             <argument type="service" id="cowlby_duo_security.duo_web" />
-            <argument /> <!-- User Provider -->
-            <argument type="service" id="security.user_checker" />
-            <argument /> <!-- Provider-shared Key -->
+            <argument type="service" id="templating" />
+            <argument type="service" id="router" />
         </service>
 
-        <!-- Form Authentication Provider -->
-        <service id="cowlby_duo_security.security.authentication.provider.duo_security_form"
-                 class="%cowlby_duo_security.security.authentication.provider.duo_security_form.class%"
+        <!-- Authentication Provider -->
+        <service id="cowlby_duo_security.security.authentication.provider.duo"
+                 class="%cowlby_duo_security.security.authentication.provider.duo.class%"
                  abstract="true"
                  public="false">
             <argument /> <!-- User Provider -->
             <argument type="service" id="security.user_checker" />
             <argument /> <!-- Provider-shared Key -->
-            <argument type="service" id="security.encoder_factory" />
-            <argument>%security.authentication.hide_user_not_found%</argument>
+            <argument type="service" id="cowlby_duo_security.duo_web" />
         </service>
 
         <!-- Authentication Listener -->
-        <service id="cowlby_duo_security.security.authentication.listener.duo_security"
-                 class="%cowlby_duo_security.security.authentication.listener.duo_security.class%"
+        <service id="cowlby_duo_security.security.authentication.listener.duo"
+                 class="%cowlby_duo_security.security.authentication.listener.duo.class%"
                  parent="security.authentication.listener.abstract"
                  abstract="true">
-        </service>
-
-        <!-- Form Authentication Listener -->
-        <service id="cowlby_duo_security.security.authentication.listener.duo_security_form"
-                 class="%cowlby_duo_security.security.authentication.listener.duo_security_form.class%"
-                 parent="security.authentication.listener.abstract"
-                 abstract="true">
-            <call method="setDuo">
-               <argument type="service" id="cowlby_duo_security.duo_web" />
-            </call>
-            <call method="setTemplating">
-               <argument type="service" id="templating" />
-            </call>
-        </service>
-
-        <!-- Authentication Success Handler -->
-        <service id="cowlby_duo_security.security.authentication.success_handler"
-                 class="%cowlby_duo_security.security.authentication.success_handler.class%"
-                 public="false"
-                 abstract="true">
-            <argument type="service" id="cowlby_duo_security.duo_web" />
-            <argument type="service" id="templating" />
-            <argument type="service" id="security.http_utils" />
-            <argument>/</argument>
-        </service>
-
-        <!-- Default Controller -->
-        <service id="cowlby_duo_security.controller.default" class="%cowlby_duo_security.controller.default.class%">
-            <argument type="service" id="templating" />
-            <argument type="service" id="router" />
         </service>
     </services>
 </container>

@@ -22,6 +22,11 @@ class CowlbyDuoSecurityExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('cowlby_duo_security.duo.ikey', $config['duo']['ikey']);
+        $container->setParameter('cowlby_duo_security.duo.skey', $config['duo']['skey']);
+        $container->setParameter('cowlby_duo_security.duo.akey', $config['duo']['akey']);
+        $container->setParameter('cowlby_duo_security.duo.host', $config['duo']['host']);
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
     }

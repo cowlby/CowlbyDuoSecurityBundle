@@ -1,12 +1,14 @@
 <?php
 
-namespace Cowlby\Bundle\DuoSecurityBundle\Security;
+namespace Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Provider;
 
+use Cowlby\Bundle\DuoSecurityBundle\Security\DuoWebInterface;
 use Cowlby\Bundle\DuoSecurityBundle\Security\Exception\DuoSecurityException;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken;
 
 class DuoSecurityAuthenticationProvider implements AuthenticationProviderInterface
 {
@@ -18,17 +20,17 @@ class DuoSecurityAuthenticationProvider implements AuthenticationProviderInterfa
     /**
      * Constructor.
      *
-     * @param DuoWebInterface       $duo          A DuoWebInterface instance
      * @param UserProviderInterface $userProvider An UserProviderInterface instance
      * @param UserCheckerInterface  $userChecker  An UserCheckerInterface instance
      * @param string                $providerKey  The provider key
+     * @param DuoWebInterface       $duo          A DuoWebInterface instance
      */
-    public function __construct(DuoWebInterface $duo, UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, DuoWebInterface $duo)
     {
-        $this->duo = $duo;
         $this->userProvider = $userProvider;
         $this->userChecker = $userChecker;
         $this->providerKey = $providerKey;
+        $this->duo = $duo;
     }
 
     /**
@@ -36,7 +38,7 @@ class DuoSecurityAuthenticationProvider implements AuthenticationProviderInterfa
      */
     public function authenticate(TokenInterface $token)
     {
-        $username = $this->duo->verifyResponse($token->getSigResponse());
+        $username = $this->duo->verifyResponse($token->getCredentials());
 
         if (null === $username) {
             throw new DuoSecurityException('Duo Security authentication failure');
@@ -45,7 +47,7 @@ class DuoSecurityAuthenticationProvider implements AuthenticationProviderInterfa
         $user = $this->userProvider->loadUserByUsername($username);
         $this->userChecker->checkPostAuth($user);
 
-        $authenticatedToken = new DuoSecurityToken($token->getSigResponse(), $this->providerKey, $user->getRoles());
+        $authenticatedToken = new DuoSecurityToken($token->getCredentials(), $this->providerKey, $user->getRoles());
         $authenticatedToken->setUser($user);
         $authenticatedToken->setAttributes($token->getAttributes());
 

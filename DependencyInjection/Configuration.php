@@ -20,9 +20,19 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('cowlby_duo_security');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('duo')
+                    ->isRequired()
+                    ->children()
+                        ->scalarNode('ikey')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('skey')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('akey')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('host')->isRequired()->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Duo Security Authentication</title>
+        <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        {% block cowlby_duo_security_script %}
+        {% endblock cowlby_duo_security_script %}
+    </head>
+    <body>
+        {% for type, messages in app.session.flashbag.all() %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div>
+            {% block cowlby_duo_security_iframe %}
+            {% endblock cowlby_duo_security_iframe %}
+        </div>
+    </body>
+</html>

@@ -1,9 +1,0 @@
-{% extends '::base.html.twig' %}
-
-{% block body %}
-    <script src="{{ asset('bundles/cowlbyduosecurity/js/duo.js') }}"></script>
-    <script>
-        Duo.init({{ duo_options | raw }});
-    </script>
-    <iframe id="duo_iframe" width="620" height="330" frameborder="0"></iframe>
-{% endblock %}
