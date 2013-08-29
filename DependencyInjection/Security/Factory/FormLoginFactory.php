@@ -9,7 +9,9 @@ class FormLoginFactory extends BaseFactory
     public function __construct()
     {
         parent::__construct();
-        $this->addOption('duo_security', false);
+        $this->addOption('duo_security', true);
+        $this->addOption('login_path', 'cowlby_duo_security_login');
+        $this->addOption('check_path', 'cowlby_duo_security_login_check');
     }
 
     public function getKey()
