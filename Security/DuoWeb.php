@@ -2,6 +2,8 @@
 
 namespace Cowlby\Bundle\DuoSecurityBundle\Security;
 
+use Symfony\Component\Security\Core\User\UserInterface;
+
 class DuoWeb implements DuoWebInterface
 {
     const DUO_PREFIX = "TX";
@@ -38,22 +40,29 @@ class DuoWeb implements DuoWebInterface
         return $this->host;
     }
 
-    public function signRequest($username)
+    public function signRequest($user)
     {
-        if (! isset($username) || strlen($username) == 0) {
+        if ($user instanceof UserInterface) {
+            $user = $user->getUsername();
+        }
+
+        if (! isset($user) || strlen($user) == 0) {
             return self::ERR_USER;
         }
+
         if (! isset($this->ikey) || strlen($this->ikey) != self::IKEY_LEN) {
             return self::ERR_IKEY;
         }
+
         if (! isset($this->skey) || strlen($this->skey) != self::SKEY_LEN) {
             return self::ERR_SKEY;
         }
+
         if (! isset($this->akey) || strlen($this->akey) < self::AKEY_LEN) {
             return self::ERR_AKEY;
         }
 
-        $vals = $username . '|' . $this->ikey;
+        $vals = $user . '|' . $this->ikey;
 
         $duo_sig = $this->signVals($this->skey, $vals, self::DUO_PREFIX, self::DUO_EXPIRE);
         $app_sig = $this->signVals($this->akey, $vals, self::APP_PREFIX, self::APP_EXPIRE);
@@ -68,13 +77,12 @@ class DuoWeb implements DuoWebInterface
         $auth_user = $this->parseVals($this->skey, $auth_sig, self::AUTH_PREFIX);
         $app_user = $this->parseVals($this->akey, $app_sig, self::APP_PREFIX);
 
-        if ($auth_user != $app_user) {
+        if ($auth_user !== $app_user) {
             return null;
         }
 
         return $auth_user;
     }
-
 
     protected function signVals($key, $vals, $prefix, $expire)
     {
