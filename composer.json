@@ -1,0 +1,35 @@
+{
+	"name" : "cowlby/duo-security-bundle",
+	"description" : "Provides Duo Security two-factor authentication integration for your Symfony2 projects.",
+	"type" : "symfony-bundle",
+	"authors" : [{
+			"name" : "Jose Prado",
+			"email" : "cowlby@me.com",
+			"homepage" : "https://github.com/cowlby"
+		}
+	],
+	"keywords" : [
+		"Security",
+		"Two-factor Authentication",
+		"Duo Security"
+	],
+	"homepage" : "https://github.com/cowlby/CowlbyDuoSecurityBundle",
+	"license" : [
+		"MIT"
+	],
+	"require" : {
+		"php" : ">=5.3.2",
+		"symfony/framework-bundle" : "~2.2"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"Cowlby\\Bundle\\DuoSecurityBundle" : ""
+		}
+	},
+	"target-dir" : "Cowlby/Bundle/DuoSecurityBundle",
+	"support" : {
+		"source" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/tree/master",
+		"issues" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/issues",
+		"wiki" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/wiki"
+	}
+}
