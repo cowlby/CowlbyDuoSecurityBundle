@@ -23,7 +23,6 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('duo')
-                    ->isRequired()
                     ->children()
                         ->scalarNode('ikey')->isRequired()->cannotBeEmpty()->end()
                         ->scalarNode('skey')->isRequired()->cannotBeEmpty()->end()
