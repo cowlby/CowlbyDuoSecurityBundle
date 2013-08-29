@@ -6,7 +6,6 @@
 
     <parameters>
         <parameter key="cowlby_duo_security.duo_web.class">Cowlby\Bundle\DuoSecurityBundle\Security\DuoWeb</parameter>
-        <parameter key="cowlby_duo_security.controller.authentication.class">Cowlby\Bundle\DuoSecurityBundle\Controller\AuthenticationController</parameter>
         <parameter key="cowlby_duo_security.security.authentication.provider.duo.class">Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Provider\DuoSecurityAuthenticationProvider</parameter>
         <parameter key="cowlby_duo_security.security.authentication.listener.duo.class">Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\DuoSecurityAuthenticationListener</parameter>
         <parameter key="cowlby_duo_security.security.authentication.listener.form.class">Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\UsernamePasswordFormAuthenticationListener</parameter>
@@ -19,13 +18,6 @@
             <argument>%cowlby_duo_security.duo.skey%</argument>
             <argument>%cowlby_duo_security.duo.akey%</argument>
             <argument>%cowlby_duo_security.duo.host%</argument>
-        </service>
-
-        <!-- Authentication Controller -->
-        <service id="cowlby_duo_security.controller.authentication" class="%cowlby_duo_security.controller.authentication.class%">
-            <argument type="service" id="cowlby_duo_security.duo_web" />
-            <argument type="service" id="templating" />
-            <argument type="service" id="router" />
         </service>
 
         <!-- Authentication Provider -->
