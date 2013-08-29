@@ -9,6 +9,7 @@
         <parameter key="cowlby_duo_security.controller.authentication.class">Cowlby\Bundle\DuoSecurityBundle\Controller\AuthenticationController</parameter>
         <parameter key="cowlby_duo_security.security.authentication.provider.duo.class">Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Provider\DuoSecurityAuthenticationProvider</parameter>
         <parameter key="cowlby_duo_security.security.authentication.listener.duo.class">Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\DuoSecurityAuthenticationListener</parameter>
+        <parameter key="cowlby_duo_security.security.authentication.listener.form.class">Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\UsernamePasswordFormAuthenticationListener</parameter>
     </parameters>
 
     <services>
@@ -43,6 +44,19 @@
                  class="%cowlby_duo_security.security.authentication.listener.duo.class%"
                  parent="security.authentication.listener.abstract"
                  abstract="true">
+        </service>
+
+        <!-- Form Authentication Listener -->
+        <service id="cowlby_duo_security.security.authentication.listener.form"
+                 class="%cowlby_duo_security.security.authentication.listener.form.class%"
+                 parent="security.authentication.listener.abstract"
+                 abstract="true">
+            <call method="setDuo">
+               <argument type="service" id="cowlby_duo_security.duo_web" />
+            </call>
+            <call method="setTemplating">
+               <argument type="service" id="templating" />
+            </call>
         </service>
     </services>
 </container>
