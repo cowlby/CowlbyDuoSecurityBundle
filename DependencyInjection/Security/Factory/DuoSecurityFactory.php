@@ -2,13 +2,18 @@
 
 namespace Cowlby\Bundle\DuoSecurityBundle\DependencyInjection\Security\Factory;
 
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 
 class DuoSecurityFactory extends AbstractFactory
 {
+    public function __construct()
+    {
+        $this->addOption('check_path', 'cowlby_duo_security_duo_verify');
+    }
+
     public function getPosition()
     {
         return 'http';
