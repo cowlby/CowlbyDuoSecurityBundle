@@ -8,12 +8,12 @@ Documentation
 -------------
 
 The bulk of the documentation is stored in the `Resources/doc/index.md` file in
-this bundle: [Read the Documentation](https://github.com/cowlby/CowlbyDuoSecurityBundle/blob/master/Resources/doc/index.md)
+this bundle: [Read the Documentation][1]
 
 Installation
 ------------
 
-Installation instructions will be located in [documentation](https://github.com/cowlby/CowlbyDuoSecurityBundle/blob/master/Resources/doc/index.md).
+All the installation instructions will be located in [documentation][1].
 
 License
 -------
@@ -21,3 +21,6 @@ License
 This bundle is under the MIT license. See the complete license in the bundle:
 
     Resources/meta/LICENSE
+
+
+[1]: https://github.com/cowlby/CowlbyDuoSecurityBundle/blob/master/Resources/doc/index.md "Documentation"
