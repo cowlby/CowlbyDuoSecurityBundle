@@ -31,7 +31,7 @@ class UsernamePasswordFormAuthenticationListener extends BaseAuthenticationListe
     {
         $authenticatedToken = parent::attemptAuthentication($request);
 
-        if ($this->options['intention'] !== 'duo_first_factor') {
+        if (!$this->options['duo_security']) {
             return $authenticatedToken;
         }
 

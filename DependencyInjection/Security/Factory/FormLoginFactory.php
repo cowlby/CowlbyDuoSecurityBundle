@@ -6,6 +6,12 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLogin
 
 class FormLoginFactory extends BaseFactory
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addOption('duo_security', false);
+    }
+
     public function getKey()
     {
         return 'cowlby_duo_security-form_login';
