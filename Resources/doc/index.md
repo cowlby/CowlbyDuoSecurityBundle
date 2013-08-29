@@ -48,6 +48,16 @@ Add the bundle's routes to your application:
         resource: "@CowlbyDuoSecurityBundle/Resources/config/routing.xml"
         prefix:   /
 
+### Step 4: Publish the assets
+
+The Duo Web integration requres a jQuery plugin to run. It is located in
+`Resources/public/js/duo.js`. Publish it using the following command:
+
+    php app/console assets:install
+
+The sample authentication listener uses a template for the Duo Web process
+located in `Resources/views/Authentication/duo.html.twig`. This template
+includes the required jQuery, jQuery migrate, and Duo scripts.
 
 Configuration
 -------------
@@ -151,6 +161,11 @@ Once you have completed the basic installation and configuration, you can try
 creating your own custom authentication listener and integrate Duo Security
 into it. See the `UsernamePasswordFormAuthenticationListener` class provided
 in the bundle for an example on how to accomplish this.
+
+You can customize the login screen by overriding the bundle's layout file. You
+can also provide your own login screen by creating a controller action and
+pointing the authentication listener to it. I'll try to develop a guide for
+this.
 
 A Configuration Reference will be provided shortly.
 
