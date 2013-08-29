@@ -35,9 +35,16 @@ class UsernamePasswordFormAuthenticationListener extends BaseAuthenticationListe
             return $authenticatedToken;
         }
 
+        if ($this->options['post_only']) {
+            $rememberMe = $request->request->get('_remember_me', false);
+        } else {
+            $rememberMe = $request->get('_remember_me', false);
+        }
+
         $request->getSession()->clear(SecurityContextInterface::AUTHENTICATION_ERROR);
 
         return new Response($this->templating->render('CowlbyDuoSecurityBundle:Authentication:duo.html.twig', array(
+            'remember_me' => $rememberMe,
             'duo_options' => json_encode(array(
                 'sig_request' => $this->duo->signRequest($authenticatedToken->getUser()),
                 'host' => $this->duo->getHost(),
