@@ -10,7 +10,7 @@
         <div class="alert alert-error">{{ error.message }}</div>
     {% endif %}
 
-    <form action="{{ path("cowlby_duo_security_login_check") }}" method="post" role="form">
+    <form action="{{ path("cowlby_duo_security_duo_check") }}" method="post" role="form">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
         <div class="form-group">

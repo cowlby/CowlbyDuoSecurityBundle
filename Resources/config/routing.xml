@@ -8,7 +8,7 @@
         <default key="_controller">cowlby_duo_security.controller.authentication:loginAction</default>
     </route>
 
-    <route id="cowlby_duo_security_login_check" pattern="/login_check" />
+    <route id="cowlby_duo_security_duo_check" pattern="/duo_check" />
     <route id="cowlby_duo_security_duo_verify" pattern="/duo_verify" />
     <route id="cowlby_duo_security_logout" pattern="/logout" />
 </routes>
