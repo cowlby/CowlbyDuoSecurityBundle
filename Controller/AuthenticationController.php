@@ -1,41 +1,40 @@
 <?php
 namespace Cowlby\Bundle\DuoSecurityBundle\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Form\Extension\Csrf\CsrfProvider\CsrfProviderInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Cowlby\Bundle\DuoSecurityBundle\Security\DuoWebInterface;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Templating\EngineInterface;
 
-class AuthenticationController extends ContainerAware
+class AuthenticationController
 {
-    private $duo;
     private $templating;
-    private $routing;
+    private $csrfProvider;
 
-    public function __construct(DuoWebInterface $duo, EngineInterface $templating, RouterInterface $routing)
+    public function __construct(EngineInterface $templating, CsrfProviderInterface $csrfProvider = null)
     {
-        $this->duo = $duo;
         $this->templating = $templating;
-        $this->routing = $routing;
+        $this->csrfProvider = $csrfProvider;
     }
 
-    public function duoVerifyAction()
+    public function loginAction(Request $request)
     {
-    }
+        $session = $request->getSession();
 
-    public function duoTestAction()
-    {
-        $user = 'cowlby';
+        if ($request->attributes->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
+            $error = $request->attributes->get(SecurityContextInterface::AUTHENTICATION_ERROR, null);
+        } else {
+            $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR, null);
+        }
 
-        $duoOptions = json_encode(array(
-            'sig_request' => $this->duo->signRequest($user),
-            'host' => $this->duo->getHost(),
-            'post_action' => $this->routing->generate('cowlby_duo_security_duo_verify')
-        ), JSON_UNESCAPED_SLASHES);
+        $lastUsername = $session->get(SecurityContextInterface::LAST_USERNAME, null);
+        $csrfToken = isset($this->csrfProvider) ? $this->csrfProvider->generateCsrfToken('authenticate') : null;
 
-        return new Response($this->templating->render('CowlbyDuoSecurityBundle:Authentication:duo.html.twig', array(
-            'duo_options' => $duoOptions
+        return new Response($this->templating->render('CowlbyDuoSecurityBundle:Authentication:login.html.twig', array(
+            'last_username' => $lastUsername,
+            'csrf_token' => $csrfToken,
+            'error' => $error,
         )));
     }
 }

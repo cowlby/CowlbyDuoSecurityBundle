@@ -1,0 +1,36 @@
+{% extends 'CowlbyDuoSecurityBundle::layout.html.twig' %}
+
+{% block cowlby_duo_security_content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Sign in</h1>
+    </div>
+
+    {% if error %}
+        <div class="alert alert-error">{{ error.message }}</div>
+    {% endif %}
+
+    <form action="{{ path("cowlby_duo_security_login_check") }}" method="post" role="form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="_password" />
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                Remember me?
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-default">Sign in</button>
+    </form>
+</div>
+{% endblock %}

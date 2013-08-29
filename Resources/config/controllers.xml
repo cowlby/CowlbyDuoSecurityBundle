@@ -11,6 +11,8 @@
     <services>
         <!-- Authentication Controller -->
         <service id="cowlby_duo_security.controller.authentication" class="%cowlby_duo_security.controller.authentication.class%">
+            <argument type="service" id="templating" />
+            <argument type="service" id="form.csrf_provider" on-invalid="null" />
         </service>
     </services>
 </container>

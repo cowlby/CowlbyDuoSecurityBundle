@@ -2,24 +2,16 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Duo Security Authentication</title>
-        <script src="//code.jquery.com/jquery.min.js"></script>
-        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-        {% block cowlby_duo_security_duo_scripts %}
-        {% endblock cowlby_duo_security_duo_scripts %}
     </head>
     <body>
-        {% for type, messages in app.session.flashbag.all() %}
-            {% for message in messages %}
-                <div class="alert alert-{{ type }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-
         <div>
-            {% block cowlby_duo_security_duo_iframe %}
-            {% endblock cowlby_duo_security_duo_iframe %}
+            {% block cowlby_duo_security_content %}
+            {% endblock cowlby_duo_security_content %}
+
+            {% block cowlby_duo_security_javascripts %}
+                <script src="//code.jquery.com/jquery.min.js"></script>
+                <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+            {% endblock cowlby_duo_security_javascripts %}
         </div>
     </body>
 </html>

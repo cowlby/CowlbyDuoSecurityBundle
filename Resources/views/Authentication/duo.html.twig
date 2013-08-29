@@ -1,10 +1,14 @@
 {% extends 'CowlbyDuoSecurityBundle::layout.html.twig' %}
 
-{% block cowlby_duo_security_duo_scripts %}
-    <script src="{{ asset('bundles/cowlbyduosecurity/js/duo.js') }}"></script>
-    <script>Duo.init({{ duo_options | raw }});</script>
+{% block cowlby_duo_security_content %}
+    <iframe id="duo_iframe" width="620" height="330" frameborder="0"></iframe>
+    <form method="post" id="duo_form" role="form">
+        <input type="hidden" id="remember_me" name="_remember_me" value="{{ remember_me }}" />
+    </form>
 {% endblock %}
 
-{% block cowlby_duo_security_duo_iframe %}
-    <iframe id="duo_iframe" width="620" height="330" frameborder="0"></iframe>
+{% block cowlby_duo_security_javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cowlbyduosecurity/js/duo.js') }}"></script>
+    <script>Duo.init({{ duo_options | raw }});</script>
 {% endblock %}
