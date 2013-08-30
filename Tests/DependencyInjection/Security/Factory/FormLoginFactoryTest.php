@@ -34,6 +34,7 @@ class FormLoginFactoryTest extends \PHPUnit_Framework_TestCase
              $listenerId,
              $entryPointId
         ) = $this->factory->create($container, 'foo', array(
+            'login_path' => '/login',
             'use_forward' => true,
             'failure_path' => '/foo',
             'success_handler' => 'qux',
@@ -55,6 +56,7 @@ class FormLoginFactoryTest extends \PHPUnit_Framework_TestCase
             'index_5' => new Reference('qux'),
             'index_6' => new Reference('bar'),
             'index_7' => array(
+                'login_path' => '/login',
                 'use_forward' => true
             )
         ), $definition->getArguments());

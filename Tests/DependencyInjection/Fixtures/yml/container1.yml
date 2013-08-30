@@ -1,0 +1,6 @@
+cowlby_duo_security:
+    duo:
+        ikey: integration_key
+        skey: secret_key
+        akey: application_key
+        host: hostname

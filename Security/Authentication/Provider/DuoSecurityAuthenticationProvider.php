@@ -38,6 +38,10 @@ class DuoSecurityAuthenticationProvider implements AuthenticationProviderInterfa
      */
     public function authenticate(TokenInterface $token)
     {
+        if (!$this->supports($token)) {
+            return null;
+        }
+
         $username = $this->duo->verifyResponse($token->getCredentials());
 
         if (null === $username) {
