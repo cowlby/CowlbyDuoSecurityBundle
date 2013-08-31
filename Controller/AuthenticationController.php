@@ -41,10 +41,15 @@ class AuthenticationController
         $lastUsername = $session->get(SecurityContextInterface::LAST_USERNAME, null);
         $csrfToken = isset($this->csrfProvider) ? $this->csrfProvider->generateCsrfToken('authenticate') : null;
 
-        return new Response($this->templating->render('CowlbyDuoSecurityBundle:Authentication:login.html.twig', array(
-            'last_username' => $lastUsername,
-            'csrf_token' => $csrfToken,
-            'error' => $error,
-        )));
+        $content = $this->templating->render(
+            'CowlbyDuoSecurityBundle:Authentication:login.html.twig',
+            array(
+                'last_username' => $lastUsername,
+                'csrf_token' => $csrfToken,
+                'error' => $error,
+            )
+        );
+
+        return new Response($content);
     }
 }
