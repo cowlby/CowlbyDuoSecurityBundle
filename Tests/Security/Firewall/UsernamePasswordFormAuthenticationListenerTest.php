@@ -11,11 +11,9 @@
 
 namespace Cowlby\Bundle\DuoSecurityBundle\Tests\Security\Firewall;
 
-use Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\DuoSecurityAuthenticationListener;
+use Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\UsernamePasswordFormAuthenticationListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\UsernamePasswordFormAuthenticationListener;
 
 class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,7 +35,7 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
     public function testHandleWithDuoSecurityOff()
     {
         $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
+        $authManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
         $sessionStrategy = $this->getMock('Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface');
         $httpUtils = $this->getMock('Symfony\Component\Security\Http\HttpUtils');
         $providerKey = 'key';
@@ -52,7 +50,7 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
         ;
 
         $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $authenticationManager
+        $authManager
             ->expects($this->once())
             ->method('authenticate')
             ->with($this->isInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
@@ -68,7 +66,7 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
 
         $listener = new UsernamePasswordFormAuthenticationListener(
             $securityContext,
-            $authenticationManager,
+            $authManager,
             $sessionStrategy,
             $httpUtils,
             $providerKey,
@@ -99,7 +97,7 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
     public function testHandleWithDuoSecurityOn()
     {
         $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
+        $authManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
         $sessionStrategy = $this->getMock('Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface');
         $httpUtils = $this->getMock('Symfony\Component\Security\Http\HttpUtils');
         $providerKey = 'key';
@@ -121,7 +119,7 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
             ->will($this->returnValue($user))
         ;
 
-        $authenticationManager
+        $authManager
             ->expects($this->once())
             ->method('authenticate')
             ->with($this->isInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
@@ -139,7 +137,7 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
         $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
         $listener = new UsernamePasswordFormAuthenticationListener(
             $securityContext,
-            $authenticationManager,
+            $authManager,
             $sessionStrategy,
             $httpUtils,
             $providerKey,

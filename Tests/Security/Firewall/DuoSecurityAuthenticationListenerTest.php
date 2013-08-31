@@ -36,7 +36,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
     public function testHandleWithValidDuoResponseParameter()
     {
         $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
+        $authManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
         $sessionStrategy = $this->getMock('Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface');
         $httpUtils = $this->getMock('Symfony\Component\Security\Http\HttpUtils');
         $providerKey = 'key';
@@ -44,7 +44,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
         $failureHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface');
 
         $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $authenticationManager
+        $authManager
             ->expects($this->once())
             ->method('authenticate')
             ->with($this->isInstanceOf('Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken'))
@@ -60,7 +60,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener = new DuoSecurityAuthenticationListener(
             $securityContext,
-            $authenticationManager,
+            $authManager,
             $sessionStrategy,
             $httpUtils,
             $providerKey,
@@ -89,7 +89,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
     public function testHandleWithNoDuoResponseParameter()
     {
         $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
+        $authManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
         $sessionStrategy = $this->getMock('Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface');
         $httpUtils = $this->getMock('Symfony\Component\Security\Http\HttpUtils');
         $providerKey = 'key';
@@ -98,7 +98,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener = new DuoSecurityAuthenticationListener(
             $securityContext,
-            $authenticationManager,
+            $authManager,
             $sessionStrategy,
             $httpUtils,
             $providerKey,
@@ -122,15 +122,14 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
     public function testHandleWhenAuthenticationFails()
     {
         $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
+        $authManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
         $sessionStrategy = $this->getMock('Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface');
         $httpUtils = $this->getMock('Symfony\Component\Security\Http\HttpUtils');
         $providerKey = 'key';
         $successHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface');
         $failureHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface');
 
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $authenticationManager
+        $authManager
             ->expects($this->once())
             ->method('authenticate')
             ->with($this->isInstanceOf('Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken'))
@@ -146,7 +145,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener = new DuoSecurityAuthenticationListener(
             $securityContext,
-            $authenticationManager,
+            $authManager,
             $sessionStrategy,
             $httpUtils,
             $providerKey,

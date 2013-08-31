@@ -38,6 +38,18 @@ class DuoWeb implements DuoWebInterface
 
     public function __construct($ikey, $skey, $akey, $host)
     {
+        if (strlen($this->ikey) !== self::IKEY_LEN) {
+            throw new \InvalidArgumentException(self::ERR_IKEY);
+        }
+
+        if (strlen($this->skey) !== self::SKEY_LEN) {
+            throw new \InvalidArgumentException(self::ERR_SKEY);
+        }
+
+        if (strlen($this->akey) < self::AKEY_LEN) {
+            throw new \InvalidArgumentException(self::ERR_AKEY);
+        }
+
         $this->ikey = $ikey;
         $this->skey = $skey;
         $this->akey = $akey;
@@ -59,38 +71,26 @@ class DuoWeb implements DuoWebInterface
             return self::ERR_USER;
         }
 
-        if (! isset($this->ikey) || strlen($this->ikey) != self::IKEY_LEN) {
-            return self::ERR_IKEY;
-        }
-
-        if (! isset($this->skey) || strlen($this->skey) != self::SKEY_LEN) {
-            return self::ERR_SKEY;
-        }
-
-        if (! isset($this->akey) || strlen($this->akey) < self::AKEY_LEN) {
-            return self::ERR_AKEY;
-        }
-
         $vals = $user . '|' . $this->ikey;
 
-        $duo_sig = $this->signVals($this->skey, $vals, self::DUO_PREFIX, self::DUO_EXPIRE);
-        $app_sig = $this->signVals($this->akey, $vals, self::APP_PREFIX, self::APP_EXPIRE);
+        $duoSig = $this->signVals($this->skey, $vals, self::DUO_PREFIX, self::DUO_EXPIRE);
+        $appSig = $this->signVals($this->akey, $vals, self::APP_PREFIX, self::APP_EXPIRE);
 
-        return $duo_sig . ':' . $app_sig;
+        return $duoSig . ':' . $appSig;
     }
 
     public function verifyResponse($sigResponse)
     {
-        list ($auth_sig, $app_sig) = explode(':', $sigResponse);
+        list ($authSig, $appSig) = explode(':', $sigResponse);
 
-        $auth_user = $this->parseVals($this->skey, $auth_sig, self::AUTH_PREFIX);
-        $app_user = $this->parseVals($this->akey, $app_sig, self::APP_PREFIX);
+        $authUser = $this->parseVals($this->skey, $authSig, self::AUTH_PREFIX);
+        $appUser = $this->parseVals($this->akey, $appSig, self::APP_PREFIX);
 
-        if ($auth_user !== $app_user) {
+        if ($authUser !== $appUser) {
             return null;
         }
 
-        return $auth_user;
+        return $authUser;
     }
 
     protected function signVals($key, $vals, $prefix, $expire)
@@ -107,21 +107,21 @@ class DuoWeb implements DuoWebInterface
 
     protected function parseVals($key, $val, $prefix)
     {
-        $ts = time();
-        list ($u_prefix, $u_b64, $u_sig) = explode('|', $val);
+        $now = time();
+        list ($uPrefix, $uB64, $uSig) = explode('|', $val);
 
-        $sig = hash_hmac("sha1", $u_prefix . '|' . $u_b64, $key);
-        if (hash_hmac("sha1", $sig, $key) != hash_hmac("sha1", $u_sig, $key)) {
+        $sig = hash_hmac("sha1", $uPrefix . '|' . $uB64, $key);
+        if (hash_hmac("sha1", $sig, $key) != hash_hmac("sha1", $uSig, $key)) {
             return null;
         }
 
-        if ($u_prefix != $prefix) {
+        if ($uPrefix != $prefix) {
             return null;
         }
 
-        list ($user, $ikey, $exp) = explode('|', base64_decode($u_b64));
+        list ($user, $ikey, $exp) = explode('|', base64_decode($uB64));
 
-        if ($ts >= intval($exp)) {
+        if ($now >= intval($exp)) {
             return null;
         }
 

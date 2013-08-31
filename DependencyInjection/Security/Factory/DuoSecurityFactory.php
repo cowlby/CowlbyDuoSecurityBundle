@@ -38,13 +38,13 @@ class DuoSecurityFactory extends AbstractFactory
         return 'cowlby_duo_security.security.authentication.listener.duo';
     }
 
-    protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
+    protected function createAuthProvider(ContainerBuilder $container, $firewallId, $config, $userProviderId)
     {
-        $provider = 'cowlby_duo_security.security.authentication.provider.duo.'.$id;
+        $provider = 'cowlby_duo_security.security.authentication.provider.duo.'.$firewallId;
         $container
             ->setDefinition($provider, new DefinitionDecorator('cowlby_duo_security.security.authentication.provider.duo'))
             ->replaceArgument(0, new Reference($userProviderId))
-            ->replaceArgument(2, $id)
+            ->replaceArgument(2, $firewallId)
         ;
 
         return $provider;

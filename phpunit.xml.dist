@@ -12,6 +12,10 @@
          bootstrap="./vendor/autoload.php"
 >
 
+    <logging>
+          <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+    </logging>
+
     <testsuites>
         <testsuite name="CowlbyDuoSecurityBundle Test Suite">
             <directory>./Tests</directory>

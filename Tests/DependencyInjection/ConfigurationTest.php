@@ -69,11 +69,14 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function testManyConfigForDuo()
     {
-        $config = array_merge(self::$minimalConfig, array(
-            'duo' => array(
-                'lots_o_keys' => null
+        $config = array_merge(
+            self::$minimalConfig,
+            array(
+                'duo' => array(
+                    'lots_o_keys' => null
+                )
             )
-        ));
+        );
 
         $processor = new Processor();
         $config = $processor->processConfiguration($this->configuration, array($config));
