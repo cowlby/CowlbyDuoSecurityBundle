@@ -6,8 +6,9 @@ use Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\DuoSecurityAuthenticationL
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Cowlby\Bundle\DuoSecurityBundle\Security\Firewall\UsernamePasswordFormAuthenticationListener;
 
-class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
+class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
@@ -24,7 +25,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testHandleWithValidDuoResponseParameter()
+    public function testHandleWithDuoSecurityOff()
     {
         $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
         $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
@@ -33,12 +34,19 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
         $providerKey = 'key';
         $successHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface');
         $failureHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface');
+        $options = array('duo_security' => false, 'require_previous_session' => false);
+
+        $httpUtils
+            ->expects($this->once())
+            ->method('checkRequestPath')
+            ->will($this->returnValue(true))
+        ;
 
         $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $authenticationManager
             ->expects($this->once())
             ->method('authenticate')
-            ->with($this->isInstanceOf('Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken'))
+            ->with($this->isInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
             ->will($this->returnValue($token))
         ;
 
@@ -49,7 +57,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($response))
         ;
 
-        $listener = new DuoSecurityAuthenticationListener(
+        $listener = new UsernamePasswordFormAuthenticationListener(
             $securityContext,
             $authenticationManager,
             $sessionStrategy,
@@ -57,11 +65,13 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
             $providerKey,
             $successHandler,
             $failureHandler,
-            array('require_previous_session' => false)
+            $options
         );
 
-        $request = new Request(array(), array('sig_response' => 'duo_response'));
+        $request = new Request(array(), array('_username' => 'username', '_password' => 'password'));
+        $request->setMethod('POST');
         $request->setSession($this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface'));
+
         $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
         $event
             ->expects($this->any())
@@ -77,7 +87,7 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
         $listener->handle($event);
     }
 
-    public function testHandleWithNoDuoResponseParameter()
+    public function testHandleWithDuoSecurityOn()
     {
         $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
         $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
@@ -86,56 +96,39 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
         $providerKey = 'key';
         $successHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface');
         $failureHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface');
+        $options = array('duo_security' => true, 'require_previous_session' => false);
 
-        $listener = new DuoSecurityAuthenticationListener(
-            $securityContext,
-            $authenticationManager,
-            $sessionStrategy,
-            $httpUtils,
-            $providerKey,
-            $successHandler,
-            $failureHandler,
-            array('require_previous_session' => false)
-        );
-
-        $request = new Request();
-        $request->setSession($this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface'));
-        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
-        $event
-            ->expects($this->any())
-            ->method('getRequest')
-            ->will($this->returnValue($request))
+        $httpUtils
+            ->expects($this->once())
+            ->method('checkRequestPath')
+            ->will($this->returnValue(true))
         ;
 
-        $listener->handle($event);
-    }
-
-    public function testHandleWhenAuthenticationFails()
-    {
-        $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
-        $sessionStrategy = $this->getMock('Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface');
-        $httpUtils = $this->getMock('Symfony\Component\Security\Http\HttpUtils');
-        $providerKey = 'key';
-        $successHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface');
-        $failureHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface');
-
+        $user = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
         $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->will($this->returnValue($user))
+        ;
+
         $authenticationManager
             ->expects($this->once())
             ->method('authenticate')
-            ->with($this->isInstanceOf('Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken'))
-            ->will($this->throwException(new AuthenticationException()))
+            ->with($this->isInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
+            ->will($this->returnValue($token))
         ;
 
-        $response = new Response();
-        $failureHandler
+        $duo = $this->getMock('Cowlby\Bundle\DuoSecurityBundle\Security\DuoWebInterface');
+        $duo->expects($this->once())->method('getHost');
+        $duo
             ->expects($this->once())
-            ->method('onAuthenticationFailure')
-            ->will($this->returnValue($response))
+            ->method('signRequest')
+            ->will($this->returnValue(''))
         ;
 
-        $listener = new DuoSecurityAuthenticationListener(
+        $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
+        $listener = new UsernamePasswordFormAuthenticationListener(
             $securityContext,
             $authenticationManager,
             $sessionStrategy,
@@ -143,11 +136,16 @@ class DuoSecurityAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
             $providerKey,
             $successHandler,
             $failureHandler,
-            array('require_previous_session' => false)
+            $options
         );
 
-        $request = new Request(array(), array('sig_response' => 'duo_response'));
+        $listener->setTemplating($templating);
+        $listener->setDuo($duo);
+
+        $request = new Request(array(), array('_username' => 'username', '_password' => 'password'));
+        $request->setMethod('POST');
         $request->setSession($this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface'));
+
         $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
         $event
             ->expects($this->any())
