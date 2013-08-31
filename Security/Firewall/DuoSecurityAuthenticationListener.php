@@ -1,4 +1,5 @@
 <?php
+
 namespace Cowlby\Bundle\DuoSecurityBundle\Security\Firewall;
 
 use Symfony\Component\HttpFoundation\Request;
