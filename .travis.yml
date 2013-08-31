@@ -9,4 +9,6 @@ before_script:
     - vendor/bin/phpcs --config-set default_standard PSR2
 
 script:
-    - vendor/bin/phpcs -n --extensions=php --ignore=*/vendor/* .
+    - vendor/bin/phpcs -n --extensions=php --ignore=*/vendor/*,*/Resources/* .
+    - vendor/bin/phpmd  --suffixes php --exclude vendor . text codesize,naming,controversial,design
+    - vendor/bin/phpunit
