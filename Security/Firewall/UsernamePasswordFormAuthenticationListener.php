@@ -49,7 +49,7 @@ class UsernamePasswordFormAuthenticationListener extends BaseAuthenticationListe
                 'sig_request' => $this->duo->signRequest($authenticatedToken->getUser()),
                 'host' => $this->duo->getHost(),
                 'post_action' => $this->httpUtils->generateUri($request, 'cowlby_duo_security_duo_verify')
-            ), JSON_UNESCAPED_SLASHES)
+            ))
         )));
     }
 }
