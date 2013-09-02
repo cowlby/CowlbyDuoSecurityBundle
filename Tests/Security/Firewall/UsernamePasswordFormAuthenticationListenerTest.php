@@ -212,9 +212,14 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
         $templating
             ->expects($this->once())
             ->method('render')
-            ->with($this->anything(), $this->callback(function($o) {
-                return isset($o['remember_me']) && $o['remember_me'] === 'on';
-            }))
+            ->with(
+                $this->anything(),
+                $this->callback(
+                    function ($o) {
+                        return isset($o['remember_me']) && $o['remember_me'] === 'on';
+                    }
+                )
+            )
         ;
 
         $listener = new UsernamePasswordFormAuthenticationListener(
@@ -294,9 +299,14 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
         $templating
             ->expects($this->once())
             ->method('render')
-            ->with($this->anything(), $this->callback(function($o) {
-                return isset($o['remember_me']) && $o['remember_me'] === false;
-            }))
+            ->with(
+                $this->anything(),
+                $this->callback(
+                    function ($o) {
+                        return isset($o['remember_me']) && $o['remember_me'] === false;
+                    }
+                )
+            )
         ;
 
         $listener = new UsernamePasswordFormAuthenticationListener(
