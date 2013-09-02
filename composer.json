@@ -11,7 +11,8 @@
 	"keywords" : [
 		"Security",
 		"Two-factor Authentication",
-		"Duo Security"
+		"Duo Security",
+		"duosecurity"
 	],
 	"homepage" : "https://github.com/cowlby/CowlbyDuoSecurityBundle",
 	"license" : [
