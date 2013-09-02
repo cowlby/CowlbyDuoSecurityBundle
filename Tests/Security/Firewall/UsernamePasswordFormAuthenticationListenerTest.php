@@ -167,4 +167,168 @@ class UsernamePasswordFormAuthenticationListenerTest extends \PHPUnit_Framework_
 
         $listener->handle($event);
     }
+
+    public function testHandleRememberMeWithPostOnlyDisabled()
+    {
+        $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $authManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
+        $sessionStrategy = $this->getMock('Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface');
+        $httpUtils = $this->getMock('Symfony\Component\Security\Http\HttpUtils');
+        $providerKey = 'key';
+        $successHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface');
+        $failureHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface');
+        $options = array('post_only' => false, 'duo_security' => true, 'require_previous_session' => false);
+
+        $httpUtils
+            ->expects($this->once())
+            ->method('checkRequestPath')
+            ->will($this->returnValue(true))
+        ;
+
+        $user = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
+        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->will($this->returnValue($user))
+        ;
+
+        $authManager
+            ->expects($this->once())
+            ->method('authenticate')
+            ->with($this->isInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
+            ->will($this->returnValue($token))
+        ;
+
+        $duo = $this->getMock('Cowlby\Bundle\DuoSecurityBundle\Security\DuoWebInterface');
+        $duo->expects($this->once())->method('getHost');
+        $duo
+            ->expects($this->once())
+            ->method('signRequest')
+            ->will($this->returnValue(''))
+        ;
+
+        $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
+        $templating
+            ->expects($this->once())
+            ->method('render')
+            ->with($this->anything(), $this->callback(function($o) {
+                return isset($o['remember_me']) && $o['remember_me'] === 'on';
+            }))
+        ;
+
+        $listener = new UsernamePasswordFormAuthenticationListener(
+            $securityContext,
+            $authManager,
+            $sessionStrategy,
+            $httpUtils,
+            $providerKey,
+            $successHandler,
+            $failureHandler,
+            $options
+        );
+
+        $listener->setTemplating($templating);
+        $listener->setDuo($duo);
+
+        $request = new Request(array('_remember_me' => 'on'), array('_username' => 'username', '_password' => 'password'));
+        $request->setMethod('POST');
+        $request->setSession($this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface'));
+
+        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
+        $event
+            ->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request))
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('setResponse')
+        ;
+
+        $listener->handle($event);
+    }
+
+    public function testHandleRememberMeWithPostOnlyEnabled()
+    {
+        $securityContext = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $authManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
+        $sessionStrategy = $this->getMock('Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface');
+        $httpUtils = $this->getMock('Symfony\Component\Security\Http\HttpUtils');
+        $providerKey = 'key';
+        $successHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface');
+        $failureHandler = $this->getMock('Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface');
+        $options = array('duo_security' => true, 'require_previous_session' => false);
+
+        $httpUtils
+            ->expects($this->once())
+            ->method('checkRequestPath')
+            ->will($this->returnValue(true))
+        ;
+
+        $user = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
+        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->will($this->returnValue($user))
+        ;
+
+        $authManager
+            ->expects($this->once())
+            ->method('authenticate')
+            ->with($this->isInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
+            ->will($this->returnValue($token))
+        ;
+
+        $duo = $this->getMock('Cowlby\Bundle\DuoSecurityBundle\Security\DuoWebInterface');
+        $duo->expects($this->once())->method('getHost');
+        $duo
+            ->expects($this->once())
+            ->method('signRequest')
+            ->will($this->returnValue(''))
+        ;
+
+        $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
+        $templating
+            ->expects($this->once())
+            ->method('render')
+            ->with($this->anything(), $this->callback(function($o) {
+                return isset($o['remember_me']) && $o['remember_me'] === false;
+            }))
+        ;
+
+        $listener = new UsernamePasswordFormAuthenticationListener(
+            $securityContext,
+            $authManager,
+            $sessionStrategy,
+            $httpUtils,
+            $providerKey,
+            $successHandler,
+            $failureHandler,
+            $options
+        );
+
+        $listener->setTemplating($templating);
+        $listener->setDuo($duo);
+
+        $request = new Request(array('_remember_me' => 'on'), array('_username' => 'username', '_password' => 'password'));
+        $request->setMethod('POST');
+        $request->setSession($this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface'));
+
+        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
+        $event
+            ->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request))
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('setResponse')
+        ;
+
+        $listener->handle($event);
+    }
 }
