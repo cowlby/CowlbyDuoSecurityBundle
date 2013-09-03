@@ -38,15 +38,15 @@ class DuoWeb implements DuoWebInterface
 
     public function __construct($ikey, $skey, $akey, $host)
     {
-        if (strlen($this->ikey) !== self::IKEY_LEN) {
+        if (strlen($ikey) !== self::IKEY_LEN) {
             throw new \InvalidArgumentException(self::ERR_IKEY);
         }
 
-        if (strlen($this->skey) !== self::SKEY_LEN) {
+        if (strlen($skey) !== self::SKEY_LEN) {
             throw new \InvalidArgumentException(self::ERR_SKEY);
         }
 
-        if (strlen($this->akey) < self::AKEY_LEN) {
+        if (strlen($akey) < self::AKEY_LEN) {
             throw new \InvalidArgumentException(self::ERR_AKEY);
         }
 
