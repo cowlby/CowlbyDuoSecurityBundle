@@ -11,9 +11,9 @@
 
 namespace Cowlby\Bundle\DuoSecurityBundle\Security\Firewall;
 
+use Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
-use Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken;
 
 class DuoSecurityAuthenticationListener extends AbstractAuthenticationListener
 {

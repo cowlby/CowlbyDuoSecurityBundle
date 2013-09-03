@@ -12,12 +12,12 @@
 namespace Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Provider;
 
 use Cowlby\Bundle\DuoSecurityBundle\Security\DuoWebInterface;
+use Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken;
 use Cowlby\Bundle\DuoSecurityBundle\Security\Exception\DuoSecurityException;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken;
 
 class DuoSecurityAuthenticationProvider implements AuthenticationProviderInterface
 {
