@@ -14,8 +14,8 @@ namespace Cowlby\Bundle\DuoSecurityBundle\Exception;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * DuoSecurityException is thrown when Duo Security authentication is
- * unsuccessful.
+ * DuoSecurityAuthenticationException is thrown when Duo Security
+ * authentication is unsuccessful.
  *
  * @author Jose Prado <cowlby@me.com>
  */
