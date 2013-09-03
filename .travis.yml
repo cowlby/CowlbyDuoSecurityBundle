@@ -2,6 +2,8 @@ language: php
 
 php:
     - 5.3
+    - 5.4
+    - 5.5
 
 before_script:
     - php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
@@ -9,6 +11,6 @@ before_script:
     - vendor/bin/phpcs --config-set default_standard PSR2
 
 script:
+    - vendor/bin/phpunit
     - vendor/bin/phpcs -n --extensions=php --ignore=*/vendor/*,*/Resources/* .
     - vendor/bin/phpmd  --suffixes php --exclude vendor . text codesize,naming,controversial,design
-    - vendor/bin/phpunit
