@@ -12,7 +12,7 @@ framework:
 
 cowlby_duo_security:
     duo:
-        ikey: integration_key
-        skey: secret_key
-        akey: application_key
-        host: hostname
+        ikey: 12345678901234567890
+        skey: 1234567890123456789012345678901234567890
+        akey: 1234567890123456789012345678901234567890
+        host: api-XXXXXXXX.duosecurity.com
