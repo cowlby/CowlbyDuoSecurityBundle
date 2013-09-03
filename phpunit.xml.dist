@@ -11,6 +11,9 @@
          syntaxCheck="false"
          bootstrap="./vendor/autoload.php"
 >
+    <php>
+        <server name="KERNEL_DIR" value="./Tests/Fixtures/App/app" />
+    </php>
 
     <logging>
           <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>

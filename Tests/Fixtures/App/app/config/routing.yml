@@ -1,0 +1,3 @@
+cowlby_duo_security:
+    resource: "@CowlbyDuoSecurityBundle/Resources/config/routing.xml"
+    prefix:   /
