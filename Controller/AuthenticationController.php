@@ -32,12 +32,7 @@ class AuthenticationController
     {
         $session = $request->getSession();
 
-        if ($request->attributes->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(SecurityContextInterface::AUTHENTICATION_ERROR, null);
-        } else {
-            $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR, null);
-        }
-
+        $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR, null);
         $lastUsername = $session->get(SecurityContextInterface::LAST_USERNAME, null);
         $csrfToken = isset($this->csrfProvider) ? $this->csrfProvider->generateCsrfToken('authenticate') : null;
 
