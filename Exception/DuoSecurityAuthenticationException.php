@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cowlby\Bundle\DuoSecurityBundle\Security\Exception;
+namespace Cowlby\Bundle\DuoSecurityBundle\Exception;
 
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  *
  * @author Jose Prado <cowlby@me.com>
  */
-class DuoSecurityException extends AuthenticationException
+class DuoSecurityAuthenticationException extends AuthenticationException implements ExceptionInterface
 {
     /**
      * {@inheritDoc}

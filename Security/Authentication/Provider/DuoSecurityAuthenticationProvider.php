@@ -13,7 +13,7 @@ namespace Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Provider;
 
 use Cowlby\Bundle\DuoSecurityBundle\Security\DuoWebInterface;
 use Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityToken;
-use Cowlby\Bundle\DuoSecurityBundle\Security\Exception\DuoSecurityException;
+use Cowlby\Bundle\DuoSecurityBundle\Security\Exception\DuoSecurityAuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
@@ -54,7 +54,7 @@ class DuoSecurityAuthenticationProvider implements AuthenticationProviderInterfa
         $username = $this->duo->verifyResponse($token->getCredentials());
 
         if (null === $username) {
-            throw new DuoSecurityException('Duo Security authentication failure');
+            throw new DuoSecurityAuthenticationException('Duo Security authentication failure');
         }
 
         $user = $this->userProvider->loadUserByUsername($username);

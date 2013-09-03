@@ -33,7 +33,7 @@ class DuoSecurityAuthenticationProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cowlby\Bundle\DuoSecurityBundle\Security\Exception\DuoSecurityException
+     * @expectedException \Cowlby\Bundle\DuoSecurityBundle\Exception\DuoSecurityAuthenticationException
      */
     public function testAuthenticateWhenDuoVeriyFails()
     {
