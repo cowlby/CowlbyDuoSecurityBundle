@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AuthenticationControllerTest extends WebTestCase
 {
+    protected static $class = 'Cowlby\Bundle\DuoSecurityBundle\Tests\Fixtures\App\app\AppKernel';
+
     public function testLoginAction()
     {
         $client = static::createClient();

@@ -1,5 +1,7 @@
 <?php
 
+namespace Cowlby\Bundle\DuoSecurityBundle\Tests\Fixtures\App\app;
+
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -8,10 +10,10 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         return array(
-            new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
-            new Symfony\Bundle\TwigBundle\TwigBundle(),
-            new Cowlby\Bundle\DuoSecurityBundle\CowlbyDuoSecurityBundle()
+            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
+            new \Symfony\Bundle\TwigBundle\TwigBundle(),
+            new \Cowlby\Bundle\DuoSecurityBundle\CowlbyDuoSecurityBundle()
         );
     }
 
