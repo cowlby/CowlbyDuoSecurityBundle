@@ -27,6 +27,14 @@ class DuoSecurityTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $token->getProviderKey());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testThrowsInvalidArgumentExceptionOnInvalidProviderKey()
+    {
+        $token = new DuoSecurityToken('foo', '');
+    }
+
     public function testSetAuthenticatedToTrue()
     {
         $token = new DuoSecurityToken('foo', 'bar');
