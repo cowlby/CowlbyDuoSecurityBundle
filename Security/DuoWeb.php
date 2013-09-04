@@ -11,49 +11,24 @@
 
 namespace Cowlby\Bundle\DuoSecurityBundle\Security;
 
+use Cowlby\Bundle\DuoSecurityBundle\Exception\DuoSecurityAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class DuoWeb implements DuoWebInterface
 {
-    const DUO_PREFIX = "TX";
-    const APP_PREFIX = "APP";
-    const AUTH_PREFIX = "AUTH";
-
-    const DUO_EXPIRE = 300;
-    const APP_EXPIRE = 3600;
-
-    const IKEY_LEN = 20;
-    const SKEY_LEN = 40;
-    const AKEY_LEN = 40; // if this changes you have to change ERR_AKEY
-
-    const ERR_USER = 'ERR|The username passed to sign_request() is invalid.';
-    const ERR_IKEY = 'ERR|The Duo integration key passed to sign_request() is invalid.';
-    const ERR_SKEY = 'ERR|The Duo secret key passed to sign_request() is invalid.';
-    const ERR_AKEY = "ERR|The application secret key passed to sign_request() must be at least 40 characters.";
-
     private $ikey;
     private $skey;
     private $akey;
     private $host;
+    private $timestamp;
 
-    public function __construct($ikey, $skey, $akey, $host)
+    public function __construct($ikey, $skey, $akey, $host, $timestamp = null)
     {
-        if (strlen($ikey) !== self::IKEY_LEN) {
-            throw new \InvalidArgumentException(self::ERR_IKEY);
-        }
-
-        if (strlen($skey) !== self::SKEY_LEN) {
-            throw new \InvalidArgumentException(self::ERR_SKEY);
-        }
-
-        if (strlen($akey) < self::AKEY_LEN) {
-            throw new \InvalidArgumentException(self::ERR_AKEY);
-        }
-
         $this->ikey = $ikey;
         $this->skey = $skey;
         $this->akey = $akey;
         $this->host = $host;
+        $this->timestamp = empty($timestamp) ? time() : $timestamp;
     }
 
     public function getHost()
@@ -67,62 +42,61 @@ class DuoWeb implements DuoWebInterface
             $user = $user->getUsername();
         }
 
-        if (! isset($user) || strlen($user) == 0) {
-            return self::ERR_USER;
-        }
+        $data = sprintf('%s|%s', $user, $this->ikey);
+        $duoSig = $this->signData($this->skey, $data, self::DUO_PREFIX, self::DUO_EXPIRE);
+        $appSig = $this->signData($this->akey, $data, self::APP_PREFIX, self::APP_EXPIRE);
 
-        $vals = $user . '|' . $this->ikey;
-
-        $duoSig = $this->signVals($this->skey, $vals, self::DUO_PREFIX, self::DUO_EXPIRE);
-        $appSig = $this->signVals($this->akey, $vals, self::APP_PREFIX, self::APP_EXPIRE);
-
-        return $duoSig . ':' . $appSig;
+        return sprintf('%s|%s', $duoSig, $appSig);
     }
 
     public function verifyResponse($sigResponse)
     {
-        list ($authSig, $appSig) = explode(':', $sigResponse);
+        list($authSig, $appSig) = explode(':', $sigResponse);
 
-        $authUser = $this->parseVals($this->skey, $authSig, self::AUTH_PREFIX);
-        $appUser = $this->parseVals($this->akey, $appSig, self::APP_PREFIX);
+        $authUser = $this->decodeSignedData($this->skey, $authSig, self::AUTH_PREFIX);
+        $appUser = $this->decodeSignedData($this->akey, $appSig, self::APP_PREFIX);
 
         if ($authUser !== $appUser) {
-            return null;
+            throw new DuoSecurityAuthenticationException('Duo Web users did not match.');
         }
 
         return $authUser;
     }
 
-    protected function signVals($key, $vals, $prefix, $expire)
+    private function hash($key, $message)
     {
-        $exp = time() + $expire;
-
-        $val = $vals . '|' . $exp;
-        $b64 = base64_encode($val);
-        $cookie = $prefix . '|' . $b64;
-
-        $sig = hash_hmac("sha1", $cookie, $key);
-        return $cookie . '|' . $sig;
+        return hash_hmac('sha1', $message, $key);
     }
 
-    protected function parseVals($key, $val, $prefix)
+    private function signData($key, $data, $prefix, $expire)
     {
-        $now = time();
-        list ($uPrefix, $uB64, $uSig) = explode('|', $val);
+        $expiration = $this->timestamp + $expire;
+        $encodedData = base64_encode(sprintf('%s|%s', $data, $expiration));
+        $message = sprintf('%s|%s', $prefix, $encodedData);
 
-        $sig = hash_hmac("sha1", $uPrefix . '|' . $uB64, $key);
-        if (hash_hmac("sha1", $sig, $key) != hash_hmac("sha1", $uSig, $key)) {
-            return null;
+        $digest = $this->hash($key, $message);
+
+        return sprintf('%s|%s', $message, $digest);
+    }
+
+    private function decodeSignedData($key, $signedData, $expectedPrefix)
+    {
+        list($sigPrefix, $encodedData, $sigDigest) = explode('|', $signedData);
+
+        $digest = $this->hash($key, sprintf('%s|%s', $sigPrefix, $encodedData));
+
+        if ($this->hash($key, $digest) !== $this->hash($key, $sigDigest) || $sigPrefix !== $expectedPrefix) {
+            throw new DuoSecurityAuthenticationException('Invalid Duo Web response.');
         }
 
-        if ($uPrefix != $prefix) {
-            return null;
+        list($user, $ikey, $expiration) = explode('|', base64_decode($encodedData));
+
+        if ($ikey !== $this->ikey) {
+            throw new DuoSecurityAuthenticationException('Can not authenticate from a different integration.');
         }
 
-        list ($user, $ikey, $exp) = explode('|', base64_decode($uB64));
-
-        if ($now >= intval($exp)) {
-            return null;
+        if ($this->timestamp > $expiration) {
+            throw new DuoSecurityAuthenticationException('Authentication request expired.');
         }
 
         return $user;

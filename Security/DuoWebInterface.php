@@ -13,6 +13,13 @@ namespace Cowlby\Bundle\DuoSecurityBundle\Security;
 
 interface DuoWebInterface
 {
+    const DUO_PREFIX = "TX";
+    const APP_PREFIX = "APP";
+    const AUTH_PREFIX = "AUTH";
+
+    const DUO_EXPIRE = 300;
+    const APP_EXPIRE = 3600;
+
     public function getHost();
 
     public function signRequest($username);
