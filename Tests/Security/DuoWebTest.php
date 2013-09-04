@@ -19,7 +19,7 @@ class DuoWebTest extends \PHPUnit_Framework_TestCase
     private static $skey = '6OofAhKYidYZQgAFlXUVyzJ1iwqbtS8yDYzp406E';
     private static $akey = '3ujoyvglcavmusd4rdtm2somylkjsqlgoxrdlndt';
     private static $host = 'api-XXXXXXXX.duosecurity.com';
-    private static $sigPattern = '/^TX|\w+|\w+:APP|\w+|\w+$/';
+    private static $sigPattern = '/^TX\|[^\|]+\|[^:]+:APP\|[^\|]+\|[^\|]+$/';
 
     public function testGetHost()
     {
@@ -30,8 +30,8 @@ class DuoWebTest extends \PHPUnit_Framework_TestCase
     public function testSignRequestWithUserString()
     {
         $duo = new DuoWeb(self::$ikey, self::$skey, self::$akey, self::$host);
-        $user = 'mock';
 
+        $user = 'mock';
         $this->assertRegExp(self::$sigPattern, $duo->signRequest($user), 'Did not return valid signature.');
     }
 
@@ -116,6 +116,19 @@ class DuoWebTest extends \PHPUnit_Framework_TestCase
         $duo = new DuoWeb(self::$ikey, self::$skey, self::$akey, self::$host, $timestamp);
 
         $sigResponse = 'AUTH|Y293bGJ5fERJR1RGMDhKNDdNTDFMM0I1UjVYfDEzNzgyNDc0MDI=|dbfd7894ee7b41db6c846e6b609063895565c0e4:APP|Y293bGJ5fERJR1RGMDhKNDdNTDFMM0I1UjVYfDEzNzgyNTA5MzI=|289d9115a30ca3dd62bb9bf9cff4eca2e4284169';
+        $user = $duo->verifyResponse($sigResponse);
+    }
+
+    /**
+     * @expectedException Cowlby\Bundle\DuoSecurityBundle\Exception\DuoSecurityAuthenticationException
+     * @expectedExceptionMessage Duo Security user mismatch.
+     */
+    public function testVerifyResponseWithTamperedUser()
+    {
+        $timestamp = time() - 60 * 60 * 24 * 365 * 10;
+        $duo = new DuoWeb(self::$ikey, self::$skey, self::$akey, self::$host, $timestamp);
+
+        $sigResponse = 'AUTH|Y293bGJ5fERJR1RGMDhKNDdNTDFMM0I1UjVYfDEzNzgyNjMyMjA=|14b1dc969e8c87b7ad56d71b74090e81b6e0b1eb:APP|anByYWRvfERJR1RGMDhKNDdNTDFMM0I1UjVYfDEzNzgyNjY3ODg=|97a549d5ef08c287708d9629bc9770dc57ee7b8d';
         $user = $duo->verifyResponse($sigResponse);
     }
 }

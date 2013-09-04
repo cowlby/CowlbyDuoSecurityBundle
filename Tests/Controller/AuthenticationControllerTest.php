@@ -93,7 +93,9 @@ class AuthenticationControllerTest extends WebTestCase
         $crawler = $client->request('POST', '/duo_verify', array('sig_response' => $sigResponse));
         $crawler = $client->followRedirect();
 
-        $error = $crawler->filter('html:contains("Duo Security authentication failure")');
+        $error = $crawler->filter('div.alert-error');
+
+        $this->assertNotEmpty($error->text(), 'No error in form.');
         $this->assertGreaterThan(0, $error->count(), 'Did not redirect to login with error.');
     }
 

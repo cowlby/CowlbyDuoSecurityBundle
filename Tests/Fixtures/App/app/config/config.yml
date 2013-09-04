@@ -12,7 +12,7 @@ framework:
 
 cowlby_duo_security:
     duo:
-        ikey: 12345678901234567890
-        skey: 1234567890123456789012345678901234567890
-        akey: 1234567890123456789012345678901234567890
+        ikey: DIGTF08J47ML1L3B5R5X
+        skey: 6OofAhKYidYZQgAFlXUVyzJ1iwqbtS8yDYzp406E
+        akey: 3ujoyvglcavmusd4rdtm2somylkjsqlgoxrdlndt
         host: api-XXXXXXXX.duosecurity.com

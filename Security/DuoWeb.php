@@ -28,7 +28,7 @@ class DuoWeb implements DuoWebInterface
         $this->skey = $skey;
         $this->akey = $akey;
         $this->host = $host;
-        $this->timestamp = empty($timestamp) ? time() : $timestamp;
+        $this->timestamp = $timestamp ?: time();
     }
 
     public function getHost()
@@ -46,7 +46,7 @@ class DuoWeb implements DuoWebInterface
         $duoSig = $this->signData($this->skey, $data, self::DUO_PREFIX, self::DUO_EXPIRE);
         $appSig = $this->signData($this->akey, $data, self::APP_PREFIX, self::APP_EXPIRE);
 
-        return sprintf('%s|%s', $duoSig, $appSig);
+        return sprintf('%s:%s', $duoSig, $appSig);
     }
 
     public function verifyResponse($sigResponse)
@@ -57,7 +57,7 @@ class DuoWeb implements DuoWebInterface
         $appUser = $this->decodeSignedData($this->akey, $appSig, self::APP_PREFIX);
 
         if ($authUser !== $appUser) {
-            throw new DuoSecurityAuthenticationException('Duo Web users did not match.');
+            throw new DuoSecurityAuthenticationException('Duo Security user mismatch.');
         }
 
         return $authUser;
