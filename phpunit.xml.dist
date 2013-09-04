@@ -16,7 +16,8 @@
     </php>
 
     <logging>
-          <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+          <log type="coverage-text" target="php://stdout" showUncoveredFiles="true" lowUpperBound="70" highLowerBound="95" />
+          <log type="testdox-text" target="php://stdout"/>
     </logging>
 
     <testsuites>
