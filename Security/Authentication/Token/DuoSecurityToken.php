@@ -13,6 +13,9 @@ namespace Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
+/**
+ * @author Jose Prado <cowlby@me.com>
+ */
 class DuoSecurityToken extends AbstractToken
 {
     private $credentials;

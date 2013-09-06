@@ -15,6 +15,9 @@ use Cowlby\Bundle\DuoSecurityBundle\Security\Authentication\Token\DuoSecurityTok
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 
+/**
+ * @author Jose Prado <cowlby@me.com>
+ */
 class DuoSecurityAuthenticationListener extends AbstractAuthenticationListener
 {
     /**

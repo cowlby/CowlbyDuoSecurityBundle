@@ -14,6 +14,9 @@ namespace Cowlby\Bundle\DuoSecurityBundle\Security;
 use Cowlby\Bundle\DuoSecurityBundle\Exception\DuoSecurityAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * @author Jose Prado <cowlby@me.com>
+ */
 class DuoWeb implements DuoWebInterface
 {
     private $ikey;

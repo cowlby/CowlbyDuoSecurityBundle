@@ -19,6 +19,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @author Jose Prado <cowlby@me.com>
+ */
 class DuoSecurityAuthenticationProvider implements AuthenticationProviderInterface
 {
     private $duo;

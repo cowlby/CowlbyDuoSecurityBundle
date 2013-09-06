@@ -7,8 +7,17 @@ use Cowlby\Bundle\DuoSecurityBundle\DependencyInjection\Security\Factory\FormLog
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * Bundle.
+ *
+ * @author Jose Prado <cowlby@me.com>
+ */
 class CowlbyDuoSecurityBundle extends Bundle
 {
+    /**
+     * Builds the bundle and registers the two security listener factories
+     * needed for Duo Security authentication.
+     */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

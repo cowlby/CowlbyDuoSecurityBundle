@@ -18,6 +18,9 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener as BaseAuthenticationListener;
 use Symfony\Component\Templating\EngineInterface;
 
+/**
+ * @author Jose Prado <cowlby@me.com>
+ */
 class UsernamePasswordFormAuthenticationListener extends BaseAuthenticationListener
 {
     private $duo;

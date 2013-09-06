@@ -13,6 +13,12 @@ namespace Cowlby\Bundle\DuoSecurityBundle\DependencyInjection\Security\Factory;
 
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLoginFactory as BaseFactory;
 
+/**
+ * FormLoginFactory creates services for form login authentication with Duo
+ * Security capabilities.
+ *
+ * @author Jose Prado <cowlby@me.com>
+ */
 class FormLoginFactory extends BaseFactory
 {
     public function __construct()

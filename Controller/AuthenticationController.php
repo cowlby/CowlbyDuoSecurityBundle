@@ -17,17 +17,35 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Templating\EngineInterface;
 
+/**
+ * Provides authentication controller actions.
+ *
+ * @author Jose Prado <cowlby@me.com>
+ */
 class AuthenticationController
 {
     private $templating;
     private $csrfProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param EngineInterface       $templating   A templating engine.
+     * @param CsrfProviderInterface $csrfProvider An optional CSRF Provider.
+     */
     public function __construct(EngineInterface $templating, CsrfProviderInterface $csrfProvider = null)
     {
         $this->templating = $templating;
         $this->csrfProvider = $csrfProvider;
     }
 
+    /**
+     * Renders the login template.
+     *
+     * @param Request $request The request.
+     *
+     * @return Response
+     */
     public function loginAction(Request $request)
     {
         $session = $request->getSession();

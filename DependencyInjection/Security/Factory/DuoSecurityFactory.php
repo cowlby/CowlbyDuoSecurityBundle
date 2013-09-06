@@ -16,6 +16,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 
+/**
+ * DuoSecurityFactory creates services for Duo Security authentication.
+ *
+ * @author Jose Prado <cowlby@me.com>
+ */
 class DuoSecurityFactory extends AbstractFactory
 {
     public function __construct()

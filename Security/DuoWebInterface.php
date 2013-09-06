@@ -11,6 +11,9 @@
 
 namespace Cowlby\Bundle\DuoSecurityBundle\Security;
 
+/**
+ * @author Jose Prado <cowlby@me.com>
+ */
 interface DuoWebInterface
 {
     const DUO_PREFIX = "TX";
