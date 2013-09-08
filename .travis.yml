@@ -18,7 +18,7 @@ script:
     - php vendor/bin/phpunit -c phpunit.xml.dist
     - php vendor/bin/phpcs -n --standard=PSR2 --extensions=php --ignore=*/vendor/*,*/Resources/* .
     - php vendor/bin/phpmd  --suffixes php --exclude vendor . text codesize,naming,controversial,design
-    - php vendor/bin/phpcpd --exclude vendor --exclude Tests --progress .
+    - php vendor/bin/phpcpd --exclude vendor --exclude Tests .
     - php vendor/bin/pdepend --ignore=vendor,Tests --summary-xml=build/logs/summary.xml --jdepend-chart=build/logs/jdepend.svg --overview-pyramid=build/logs/pyramid.svg .
 
 after_script:
