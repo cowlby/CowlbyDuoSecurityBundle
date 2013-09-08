@@ -5,12 +5,21 @@ php:
     - 5.4
     - 5.5
 
+matrix:
+    allow_failures:
+        - php: 5.5
+
 before_script:
-    - php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
-    - php composer.phar install --dev --prefer-source
-    - vendor/bin/phpcs --config-set default_standard PSR2
+    - curl -s http://getcomposer.org/installer | php
+    - php composer.phar install --dev --prefer-source --no-interaction
+    - mkdir -p build/logs
 
 script:
-    - vendor/bin/phpunit
-    - vendor/bin/phpcs -n --extensions=php --ignore=*/vendor/*,*/Resources/* .
-    - vendor/bin/phpmd  --suffixes php --exclude vendor . text codesize,naming,controversial,design
+    - php vendor/bin/phpunit -c phpunit.xml.dist
+    - php vendor/bin/phpcs -n --standard=PSR2 --extensions=php --ignore=*/vendor/*,*/Resources/* .
+    - php vendor/bin/phpmd  --suffixes php --exclude vendor . text codesize,naming,controversial,design
+    - php vendor/bin/phpcpd --exclude vendor --exclude Tests --progress .
+    - php vendor/bin/pdepend --ignore=vendor,Tests --summary-xml=build/logs/summary.xml --jdepend-chart=build/logs/jdepend.svg --overview-pyramid=build/logs/pyramid.svg .
+
+after_script:
+    - php vendor/bin/coveralls -v

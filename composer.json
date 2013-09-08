@@ -1,53 +1,55 @@
 {
-	"name" : "cowlby/duo-security-bundle",
-	"description" : "Provides Duo Security two-factor authentication integration for your Symfony2 projects.",
-	"type" : "symfony-bundle",
-	"authors" : [{
-			"name" : "Jose Prado",
-			"email" : "cowlby@me.com",
-			"homepage" : "https://github.com/cowlby"
-		}
-	],
-	"keywords" : [
-		"Security",
-		"Two-factor Authentication",
-		"Duo Security",
-		"duosecurity"
-	],
-	"homepage" : "https://github.com/cowlby/CowlbyDuoSecurityBundle",
-	"license" : [
-		"MIT"
-	],
-	"require" : {
-		"php" : ">=5.3.2",
-		"symfony/security-bundle": "~2.2",
-		"symfony/form": "~2.2",
-		"symfony/http-foundation": "~2.2",
-		"symfony/security": "~2.2",
-		"symfony/templating": "~2.2",
-		"symfony/dependency-injection": "~2.2",
-		"symfony/config": "~2.2"
-	},
-	"require-dev" : {
-		"phpunit/phpunit" : "~3.7",
-		"squizlabs/php_codesniffer" : "~1.4",
-		"phpmd/phpmd" : "~1.5",
-		"pdepend/pdepend" : "~1.1",
-		"symfony/framework-bundle": "~2.2",
-		"symfony/finder": "~2.2",
-		"symfony/twig-bundle": "~2.2",
-		"symfony/browser-kit": "~2.2",
-		"symfony/css-selector": "~2.2"
-	},
-	"autoload" : {
-		"psr-0" : {
-			"Cowlby\\Bundle\\DuoSecurityBundle" : ""
-		}
-	},
-	"target-dir" : "Cowlby/Bundle/DuoSecurityBundle",
-	"support" : {
-		"source" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/tree/master",
-		"issues" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/issues",
-		"wiki" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/wiki"
-	}
+    "name" : "cowlby/duo-security-bundle",
+    "description" : "Provides Duo Security two-factor authentication integration for your Symfony2 projects.",
+    "type" : "symfony-bundle",
+    "authors" : [{
+            "name" : "Jose Prado",
+            "email" : "cowlby@me.com",
+            "homepage" : "https://github.com/cowlby"
+        }
+    ],
+    "keywords" : [
+        "Security",
+        "Two-factor Authentication",
+        "Duo Security",
+        "duosecurity"
+    ],
+    "homepage" : "https://github.com/cowlby/CowlbyDuoSecurityBundle",
+    "license" : [
+        "MIT"
+    ],
+    "require" : {
+        "php" : ">=5.3.2",
+        "symfony/security-bundle": "~2.2",
+        "symfony/form": "~2.2",
+        "symfony/http-foundation": "~2.2",
+        "symfony/security": "~2.2",
+        "symfony/templating": "~2.2",
+        "symfony/dependency-injection": "~2.2",
+        "symfony/config": "~2.2"
+    },
+    "require-dev" : {
+        "phpunit/phpunit" : "~3.7",
+        "squizlabs/php_codesniffer" : "~1.4",
+        "phpmd/phpmd" : "~1.5",
+        "pdepend/pdepend" : "~1.1",
+        "sebastian/phpcpd": "~1.4",
+        "satooshi/php-coveralls": "dev-master@dev",
+        "symfony/framework-bundle": "~2.2",
+        "symfony/finder": "~2.2",
+        "symfony/twig-bundle": "~2.2",
+        "symfony/browser-kit": "~2.2",
+        "symfony/css-selector": "~2.2"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Cowlby\\Bundle\\DuoSecurityBundle" : ""
+        }
+    },
+    "target-dir" : "Cowlby/Bundle/DuoSecurityBundle",
+    "support" : {
+        "source" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/tree/master",
+        "issues" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/issues",
+        "wiki" : "https://github.com/cowlby/CowlbyDuoSecurityBundle/wiki"
+    }
 }
