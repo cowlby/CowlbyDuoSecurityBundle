@@ -35,7 +35,7 @@ Add the bundle to your application's kernel:
     // in AppKernel::registerBundles()
     $bundles = array(
         // ...
-        new Cowlby\Bundle\DuoSecurityBundle(),
+        new Cowlby\Bundle\DuoSecurityBundle\CowlbyDuoSecurityBundle(),
         // ...
     );
 
