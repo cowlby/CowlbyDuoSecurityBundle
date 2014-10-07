@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  *
  * @author Jose Prado <cowlby@me.com>
  */
-class DuoSecurityAuthenticationException extends AuthenticationException implements ExceptionInterface
+class DuoSecurityAuthenticationException extends AuthenticationException
 {
     /**
      * {@inheritDoc}
